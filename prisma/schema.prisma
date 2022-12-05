@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id String @id @default(cuid())
+
+  title     String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  ownerId   String?
+
+  owner User? @relation(fields: [ownerId], references: [id])
+
+  // A sala pode ter varios participantes
+  Participant Participant[]
+}
+
+model Game {
+  id String @id @default(cuid())
+
+  date DateTime
+
+  firstTeamCountryCode  String
+  secondTeamCountryCode String
+
+  // O jogo pode ter varios palpites
+  Guess Guess[]
+}
+
+model Participant {
+  id String @id @default(cuid())
+
+  userId String
+  roomId String
+
+  // Pegue o id's dos usuários que fizeram o palpite e coloque-os na coluna userId
+  user User @relation(fields: [userId], references: [id])
+
+  // Pegue os id's das salas que o participante se encontra.
+  room Room @relation(fields: [roomId], references: [id])
+
+  // O participante pode ter varios palpites
+  Guess Guess[]
+
+  @@unique([userId, roomId])
+}
+
+model User {
+  id String @id @default(cuid())
+
+  googleId  String?  @unique
+  name      String
+  email     String   @unique
+  avatarUrl String? //Pode ser nulo.
+  createdAt DateTime @default(now())
+
+  // O usuário pode participar de varias salas
+  parcipatingAt Participant[]
+  // O usuário pode ter varias salas
+  Room          Room[]
+}
+
+model Guess {
+  id String @id @default(cuid())
+
+  firstTeamPoints  Int
+  secondTeamPoints Int
+  gameId           String
+  participantId    String
+
+  // Pegue os id's dos participantes que deram palpite e coloque-os na coluna participantId.
+  participants Participant @relation(fields: [participantId], references: [id])
+
+  // Pegue o id do jogo que o usuário participuo e coloque-o na coluna gameId
+  game Game @relation(fields: [gameId], references: [id])
+}
