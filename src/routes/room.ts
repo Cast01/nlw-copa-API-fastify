@@ -5,6 +5,8 @@ import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugins/authenticate";
 
 export async function roomRoutes(fastify: FastifyInstance) {
+
+    // Criar uma sala
     fastify.post('/room', async (request, reply) => {
         const createRoomBody = z.object({
             title: z.string(),
@@ -51,6 +53,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
         }
     });
 
+    // Participar de uma sala.
     fastify.post('/room/join', {
         onRequest: [authenticate]
     }, async (request, reply) => {
@@ -155,6 +158,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
         return reply.code(200).send(participatingRooms);
     })
 
+    // Entrar na sala pelo ID
     fastify.get('/room/:id', {
         onRequest: [authenticate],
     }, async (request, reply) => {

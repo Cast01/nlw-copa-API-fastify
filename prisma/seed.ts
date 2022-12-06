@@ -5,16 +5,16 @@ async function main() {
 
     const user = await prisma.user.create({
         data: {
-            name: "OUTRO4",
-            email: "OUTRO4@teste.com",
+            name: "OUTRO5",
+            email: "OUTRO5@teste.com",
             avatarUrl: "http://github.com/diego3g.png",
         }
     });
 
     const room = await prisma.room.create({
         data: {
-            title: "Sala teste 4",
-            code: "POL444",
+            title: "Sala teste 5",
+            code: "POL555",
             ownerId: user.id,
 
             Participant: {
@@ -27,7 +27,7 @@ async function main() {
 
     await prisma.game.create({
         data: {
-            date: "2022-11-23T12:33:56.786Z",
+            date: "2022-12-25T12:33:56.786Z",
             firstTeamCountryCode: "UK",
             secondTeamCountryCode: "BR",
 

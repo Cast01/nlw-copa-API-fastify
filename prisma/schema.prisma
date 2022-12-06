@@ -86,4 +86,7 @@ model Guess {
 
   // Pegue o id do jogo que o usuário participuo e coloque-o na coluna gameId
   game Game @relation(fields: [gameId], references: [id])
+
+  // Só vai poder ter um registro dentro dessa combinação
+  @@unique([participantId, gameId])
 }
