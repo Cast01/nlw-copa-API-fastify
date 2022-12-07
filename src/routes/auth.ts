@@ -60,15 +60,15 @@ export async function authRoutes(fastify: FastifyInstance) {
             })
         }
 
-        const token = fastify.jwt.sign({
+        const tokenJWT = fastify.jwt.sign({
             name: user.name,
             avatarUrl: user.avatarUrl,
         }, {
             // Quem gerou o token ?
             sub: user.id,
-            expiresIn: '2 Days',
+            expiresIn: '20 seconds',
         });
 
-        reply.send({token});
+        reply.send({tokenJWT});
     });
 }
