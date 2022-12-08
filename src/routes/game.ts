@@ -4,6 +4,8 @@ import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugins/authenticate";
 
 export async function gameRoutes(fastify: FastifyInstance) {
+
+    // Essa rota vai receber um id pela URL e vai retornar quantos jogos existem dentro desta sala.
     fastify.get('/room/:id/games', {
         onRequest: [authenticate]
     }, async (request, reply) => {
@@ -13,6 +15,7 @@ export async function gameRoutes(fastify: FastifyInstance) {
 
         const {id} = roomParams.parse(request.params);
 
+        // Retorna uma array de todas as salas que eu estou participando
         const games = await prisma.game.findMany({
             orderBy: {
                 date: 'desc',

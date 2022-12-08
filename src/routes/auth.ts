@@ -4,20 +4,26 @@ import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugins/authenticate";
 
 export async function authRoutes(fastify: FastifyInstance) {
+    // Essa rota verifiqua se o JWT é verificado se sim retorna as informaçoes do usuário em questão se não vai dar algum erro.
     fastify.get(
         '/me',
         {
             onRequest: [authenticate]
         },  
-        async (request) => {
-            await request.jwtVerify();
-
+        (request) => {
             return {
                 user: request.user,
             }
         }
     );
 
+    /*
+        Essa rota recebe um access_token e faz uma chamada para a api do OAuth na rota de userInfo passando o metodo GET e no cabeçalho da chamada passando o access_token
+        atravez do Bearer e tudo der certo isso vai nos retornar uma Promise pegamos então essa Promise e a convertemos em JSON. Logo após a verificação de autenticação
+        vamos verificar se o cliente existe no Banco de Dados, se o cliente não existir pegue o valor do retorno da busca pelo cliente e crie um cliente se o cliente existir
+        gere um token JWT passando o nome e imagem de perfil como payload de JWT e como segundo parametro informe quem gerou o token e o tempo para expiração e retorne
+        o tokenJWT para o cliente.
+    */
     fastify.post("/user", async (request, reply) => {
         const userBodyType = z.object({
             access_token: z.string(),
@@ -66,9 +72,9 @@ export async function authRoutes(fastify: FastifyInstance) {
         }, {
             // Quem gerou o token ?
             sub: user.id,
-            expiresIn: '20 seconds',
+            expiresIn: '7 days',
         });
 
-        reply.send({tokenJWT});
+        return reply.send({tokenJWT});
     });
 }
