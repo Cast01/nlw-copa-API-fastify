@@ -1,15 +1,18 @@
 import { FastifyInstance } from "fastify";
-import { string, z } from "zod";
+import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugins/authenticate";
 
 export async function guessRoutes(fastify: FastifyInstance) {
+
+    // Essa rota recebe a quantidade de todos os palpites que existem.
     fastify.get('/guess/quantity', async (request, reply) => {
         const guessQuantity = await prisma.guess.count();
 
         return reply.status(201).send({guessQuantity});
     });
 
+    // Essa rota recebe o id da sala e do jogo ao qual o cliente se encontra e verifica se o participante existe, se ja deu um palpite, se o jogo existe, se o jogo ja acabou e se nenhum deles retornar true crie o palpite do participante.
     fastify.post('/room/:roomId/games/:gameId/guesses', {
         onRequest: [authenticate],
     }, async (request, reply) => {
@@ -50,7 +53,7 @@ export async function guessRoutes(fastify: FastifyInstance) {
             }
         });
 
-        // Se 
+        
         if (guess) {
             return reply.status(400).send({
                 message: "You already sont a guess to this game on this room."

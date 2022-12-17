@@ -40,8 +40,6 @@ async function api() {
     // ===============================
     await fastify.register(gameRoutes);
     
-
-    
     
 
     await fastify.listen({port: 3333});

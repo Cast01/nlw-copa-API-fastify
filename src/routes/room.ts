@@ -30,7 +30,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
                         create: {
                             userId: request.user.sub,
                         }
-                    }
+                    },
                 }
             })
         } catch (error) {
@@ -111,7 +111,10 @@ export async function roomRoutes(fastify: FastifyInstance) {
             }
         });
 
-        return reply.code(200);
+        return reply.code(200).send({
+            roomId: room.id,
+            message: "User successfuly created!",
+        });
     });
 
     // Listar todas as salas que o cliente está participando.
