@@ -33,6 +33,78 @@ export async function roomRoutes(fastify: FastifyInstance) {
                     },
                 }
             })
+
+
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-18T00:33:56.786Z",
+                    firstTeamCountryCode: "FR",
+                    secondTeamCountryCode: "LI",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-19T00:33:56.786Z",
+                    firstTeamCountryCode: "FR",
+                    secondTeamCountryCode: "BR",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-20T00:33:56.786Z",
+                    firstTeamCountryCode: "JP",
+                    secondTeamCountryCode: "LI",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-21T00:33:56.786Z",
+                    firstTeamCountryCode: "RU",
+                    secondTeamCountryCode: "US",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-22T00:33:56.786Z",
+                    firstTeamCountryCode: "FR",
+                    secondTeamCountryCode: "GE",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-23T00:33:56.786Z",
+                    firstTeamCountryCode: "US",
+                    secondTeamCountryCode: "LI",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-24T00:33:56.786Z",
+                    firstTeamCountryCode: "MT",
+                    secondTeamCountryCode: "IT",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-25T00:33:56.786Z",
+                    firstTeamCountryCode: "FR",
+                    secondTeamCountryCode: "KE",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-26T00:33:56.786Z",
+                    firstTeamCountryCode: "BR",
+                    secondTeamCountryCode: "LI",
+                }
+            });
+            await prisma.game.create({
+                data: {
+                    date: "2022-12-27T00:33:56.786Z",
+                    firstTeamCountryCode: "KE",
+                    secondTeamCountryCode: "RU",
+                }
+            });
         } catch (error) {
             await prisma.room.create({
                 data: {
