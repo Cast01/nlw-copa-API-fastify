@@ -1,20 +1,23 @@
 import {PrismaClient} from '@prisma/client';
 const prisma = new PrismaClient();
 
+const hour = new Date().getHours() + 3;
+const minute = new Date().getMinutes();
+
 async function main() {
 
     const user = await prisma.user.create({
         data: {
-            name: "TESTE1",
-            email: "TESTE1@teste.com",
+            name: "TESTE4",
+            email: "TESTE4@teste.com",
             avatarUrl: "http://github.com/diego3g.png",
         }
     });
 
     const room = await prisma.room.create({
         data: {
-            title: "Sala teste 1",
-            code: "POL111",
+            title: "Sala teste 4",
+            code: "POL444",
             ownerId: user.id,
 
             Participant: {
@@ -27,7 +30,7 @@ async function main() {
 
     await prisma.game.create({
         data: {
-            date: "2022-12-11T17:33:56.786Z",
+            date: `2022-12-21T20:35:52.786Z`,
             firstTeamCountryCode: "FR",
             secondTeamCountryCode: "LI",
 
@@ -50,7 +53,7 @@ async function main() {
     });
     await prisma.game.create({
         data: {
-            date: "2022-12-12T12:33:56.786Z",
+            date: `2022-12-20T20:38:52.786Z`,
             firstTeamCountryCode: "FR",
             secondTeamCountryCode: "BR",
 
@@ -73,14 +76,14 @@ async function main() {
     });
     await prisma.game.create({
         data: {
-            date: "2022-12-13T12:33:56.786Z",
+            date: `2022-12-21T20:40:52.786Z`,
             firstTeamCountryCode: "IT",
             secondTeamCountryCode: "GE",
         }
     });
     await prisma.game.create({
         data: {
-            date: "2022-12-28T12:33:56.786Z",
+            date: `2022-12-21T20:42:52.786Z`,
             firstTeamCountryCode: "MT",
             secondTeamCountryCode: "US",
 
@@ -103,7 +106,7 @@ async function main() {
     });
     await prisma.game.create({
         data: {
-            date: "2022-12-23T12:33:56.786Z",
+            date: `2022-12-21T20:44:52.786Z`,
             firstTeamCountryCode: "KE",
             secondTeamCountryCode: "RU",
 
@@ -126,9 +129,30 @@ async function main() {
     });
     await prisma.game.create({
         data: {
-            date: "2022-12-23T12:33:56.786Z",
+            date: `2022-12-21T20:46:52.786Z`,
             firstTeamCountryCode: "IR",
             secondTeamCountryCode: "JP",
+        }
+    });
+    await prisma.game.create({
+        data: {
+            date: `2022-12-21T20:48:52.786Z`,
+            firstTeamCountryCode: "BR",
+            secondTeamCountryCode: "JP",
+        }
+    });
+    await prisma.game.create({
+        data: {
+            date: `2022-12-21T20:50:52.786Z`,
+            firstTeamCountryCode: "IR",
+            secondTeamCountryCode: "GE",
+        }
+    });
+    await prisma.game.create({
+        data: {
+            date: `2022-12-21T20:52:52.786Z`,
+            firstTeamCountryCode: "IT",
+            secondTeamCountryCode: "RU",
         }
     });
 

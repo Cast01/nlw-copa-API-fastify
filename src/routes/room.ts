@@ -1,125 +1,100 @@
 import { FastifyInstance } from "fastify";
 import ShortUniqueId from "short-unique-id";
-import { string, z } from "zod";
+import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { authenticate } from "../plugins/authenticate";
+import { gameRoutes } from "./game";
 
 export async function roomRoutes(fastify: FastifyInstance) {
 
     // Criar uma sala
-    fastify.post('/room', async (request, reply) => {
+    fastify.post('/room', {
+        onRequest: authenticate,
+    }, async (request, reply) => {
         const createRoomBody = z.object({
             title: z.string(),
         });
 
-        const {title} = createRoomBody.parse(request.body);
+        const { title } = createRoomBody.parse(request.body);
 
         const generateRandomCode = new ShortUniqueId({ length: 6 });
         const code = String(generateRandomCode()).toUpperCase();
 
-        try {
-            await request.jwtVerify();
+        const roomCreated = await prisma.room.create({
+            data: {
+                title,
+                code,
+                ownerId: request.user.sub,
 
-            await prisma.room.create({
-                data: {
-                    title,
-                    code,
-                    ownerId: request.user.sub,
+                Participant: {
+                    create: {
+                        userId: request.user.sub,
+                    }
+                }, 
+                Game: {
+                    create: [
+                        {
+                            date: `2022-12-22T02:35:52.786Z`,
+                            firstTeamCountryCode: "FR",
+                            secondTeamCountryCode: "LI",
+                        },
+                        {
+                            date: `2022-12-22T02:38:52.786Z`,
+                            firstTeamCountryCode: "FR",
+                            secondTeamCountryCode: "BR",
+                        },
+                        {
+                            date: `2022-12-21T20:40:52.786Z`,
+                            firstTeamCountryCode: "IT",
+                            secondTeamCountryCode: "GE",
+                        },
+                        {
+                            date: `2022-12-21T20:42:52.786Z`,
+                            firstTeamCountryCode: "MT",
+                            secondTeamCountryCode: "US",
+                        }, 
+                        {
+                            date: `2022-12-21T20:44:52.786Z`,
+                            firstTeamCountryCode: "KE",
+                            secondTeamCountryCode: "RU",
+                        },
+                        {
+                            date: `2022-12-21T20:46:52.786Z`,
+                            firstTeamCountryCode: "IR",
+                            secondTeamCountryCode: "JP",
+                        },
+                        {
+                            date: `2022-12-21T20:48:52.786Z`,
+                            firstTeamCountryCode: "BR",
+                            secondTeamCountryCode: "JP",
+                        },
+                        {
+                            date: `2022-12-21T20:50:52.786Z`,
+                            firstTeamCountryCode: "IR",
+                            secondTeamCountryCode: "GE",
+                        },
+                        {
+                            date: `2022-12-21T20:52:52.786Z`,
+                            firstTeamCountryCode: "IT",
+                            secondTeamCountryCode: "RU",
+                        },
+                    ]
+                }
+            }
+        })
 
-                    Participant: {
-                        create: {
-                            userId: request.user.sub,
-                        }
-                    },
-                }
-            })
-
-
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-18T00:33:56.786Z",
-                    firstTeamCountryCode: "FR",
-                    secondTeamCountryCode: "LI",
-                }
+        if (!roomCreated) {
+            return reply.status(400).send({
+                message: "Unexpected ERROR",
             });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-19T00:33:56.786Z",
-                    firstTeamCountryCode: "FR",
-                    secondTeamCountryCode: "BR",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-20T00:33:56.786Z",
-                    firstTeamCountryCode: "JP",
-                    secondTeamCountryCode: "LI",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-21T00:33:56.786Z",
-                    firstTeamCountryCode: "RU",
-                    secondTeamCountryCode: "US",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-22T00:33:56.786Z",
-                    firstTeamCountryCode: "FR",
-                    secondTeamCountryCode: "GE",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-23T00:33:56.786Z",
-                    firstTeamCountryCode: "US",
-                    secondTeamCountryCode: "LI",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-24T00:33:56.786Z",
-                    firstTeamCountryCode: "MT",
-                    secondTeamCountryCode: "IT",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-25T00:33:56.786Z",
-                    firstTeamCountryCode: "FR",
-                    secondTeamCountryCode: "KE",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-26T00:33:56.786Z",
-                    firstTeamCountryCode: "BR",
-                    secondTeamCountryCode: "LI",
-                }
-            });
-            await prisma.game.create({
-                data: {
-                    date: "2022-12-27T00:33:56.786Z",
-                    firstTeamCountryCode: "KE",
-                    secondTeamCountryCode: "RU",
-                }
-            });
-        } catch (error) {
-            await prisma.room.create({
-                data: {
-                    title,
-                    code,
-                }
-            })
         }
 
-        return reply.status(201).send({title, code});
+        return reply.status(201).send({ title, code, roomCreatedId: roomCreated.id });
     });
-    
+
     fastify.get('/room/quantity', async () => {
         const roomQuantity = await prisma.room.count();
-    
+
         return {
             roomQuantity
         }
@@ -133,7 +108,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
             code: z.string(),
         });
 
-        const {code} = enterInRoomBody.parse(request.body);
+        const { code } = enterInRoomBody.parse(request.body);
 
         // Me traga a primeira sala que tem esse código e lá de dentro me traga o participante que tem esse id(request.user.sub).
         const room = await prisma.room.findFirst({
@@ -222,10 +197,10 @@ export async function roomRoutes(fastify: FastifyInstance) {
                     take: 4,
                 },
                 owner: {
-                   select: {
-                    id: true,
-                    name: true,
-                   } 
+                    select: {
+                        id: true,
+                        name: true,
+                    }
                 }
             }
         });
@@ -241,7 +216,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
             id: z.string(),
         });
 
-        const {id} = roomParams.parse(request.params);
+        const { id } = roomParams.parse(request.params);
 
         const insideRoom = await prisma.room.findFirst({
             // Onde
@@ -267,14 +242,40 @@ export async function roomRoutes(fastify: FastifyInstance) {
                     take: 4,
                 },
                 owner: {
-                   select: {
-                    id: true,
-                    name: true,
-                   } 
+                    select: {
+                        id: true,
+                        name: true,
+                    }
+                },
+                Game: {
+                    select: {
+                        id: true,
+                        date: true,
+                        firstTeamCountryCode: true,
+                        secondTeamCountryCode: true,
+                        Guess: {
+                            select: {
+                                firstTeamPoints: true,
+                                secondTeamPoints: true,
+                            }
+                        }
+                    }
                 }
             }
         });
 
-        return reply.status(200).send(insideRoom);
+        const allGamesInThisRoom = insideRoom?.Game.map(game => {
+            return {
+                ...game,
+                Guess: game.Guess.length > 0 ? game.Guess[0] : null
+            }
+        })
+
+        return {
+            currentRoom: {
+                ...insideRoom,
+                Game: allGamesInThisRoom,
+            },
+        };
     });
 }
