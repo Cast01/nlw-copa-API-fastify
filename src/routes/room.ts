@@ -34,12 +34,12 @@ export async function roomRoutes(fastify: FastifyInstance) {
                 Game: {
                     create: [
                         {
-                            date: `2022-12-22T02:35:52.786Z`,
+                            date: `2022-12-22T23:13:52.786Z`,
                             firstTeamCountryCode: "FR",
                             secondTeamCountryCode: "LI",
                         },
                         {
-                            date: `2022-12-22T02:38:52.786Z`,
+                            date: `2022-12-22T23:15:52.786Z`,
                             firstTeamCountryCode: "FR",
                             secondTeamCountryCode: "BR",
                         },
