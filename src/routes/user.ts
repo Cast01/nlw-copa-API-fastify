@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
+import { authenticate } from "../plugins/authenticate";
 
 export async function userRoutes(fastify: FastifyInstance) {
     fastify.get('/user/quantity', async (request, reply) => {
@@ -13,7 +14,9 @@ export async function userRoutes(fastify: FastifyInstance) {
         }
     });
     
-    fastify.get('/my-rooms/:userId', async (request, reply) => {
+    fastify.get('/my-rooms/:userId', {
+        onRequest: authenticate,
+    }, async (request, reply) => {
         const userIdParams = z.object({
             userId: z.string(),
         });

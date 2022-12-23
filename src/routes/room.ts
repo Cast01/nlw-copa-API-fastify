@@ -31,55 +31,6 @@ export async function roomRoutes(fastify: FastifyInstance) {
                         userId: request.user.sub,
                     }
                 }, 
-                Game: {
-                    create: [
-                        {
-                            date: `2022-12-22T23:13:52.786Z`,
-                            firstTeamCountryCode: "FR",
-                            secondTeamCountryCode: "LI",
-                        },
-                        {
-                            date: `2022-12-22T23:15:52.786Z`,
-                            firstTeamCountryCode: "FR",
-                            secondTeamCountryCode: "BR",
-                        },
-                        {
-                            date: `2022-12-21T20:40:52.786Z`,
-                            firstTeamCountryCode: "IT",
-                            secondTeamCountryCode: "GE",
-                        },
-                        {
-                            date: `2022-12-21T20:42:52.786Z`,
-                            firstTeamCountryCode: "MT",
-                            secondTeamCountryCode: "US",
-                        }, 
-                        {
-                            date: `2022-12-21T20:44:52.786Z`,
-                            firstTeamCountryCode: "KE",
-                            secondTeamCountryCode: "RU",
-                        },
-                        {
-                            date: `2022-12-21T20:46:52.786Z`,
-                            firstTeamCountryCode: "IR",
-                            secondTeamCountryCode: "JP",
-                        },
-                        {
-                            date: `2022-12-21T20:48:52.786Z`,
-                            firstTeamCountryCode: "BR",
-                            secondTeamCountryCode: "JP",
-                        },
-                        {
-                            date: `2022-12-21T20:50:52.786Z`,
-                            firstTeamCountryCode: "IR",
-                            secondTeamCountryCode: "GE",
-                        },
-                        {
-                            date: `2022-12-21T20:52:52.786Z`,
-                            firstTeamCountryCode: "IT",
-                            secondTeamCountryCode: "RU",
-                        },
-                    ]
-                }
             }
         })
 
@@ -89,7 +40,7 @@ export async function roomRoutes(fastify: FastifyInstance) {
             });
         }
 
-        return reply.status(201).send({ title, code, roomCreatedId: roomCreated.id });
+        return reply.status(201).send({ title, code, roomCreatedId: roomCreated.id});
     });
 
     fastify.get('/room/quantity', async () => {
@@ -246,36 +197,10 @@ export async function roomRoutes(fastify: FastifyInstance) {
                         id: true,
                         name: true,
                     }
-                },
-                Game: {
-                    select: {
-                        id: true,
-                        date: true,
-                        firstTeamCountryCode: true,
-                        secondTeamCountryCode: true,
-                        Guess: {
-                            select: {
-                                firstTeamPoints: true,
-                                secondTeamPoints: true,
-                            }
-                        }
-                    }
                 }
             }
         });
 
-        const allGamesInThisRoom = insideRoom?.Game.map(game => {
-            return {
-                ...game,
-                Guess: game.Guess.length > 0 ? game.Guess[0] : null
-            }
-        })
-
-        return {
-            currentRoom: {
-                ...insideRoom,
-                Game: allGamesInThisRoom,
-            },
-        };
+        return {insideRoom};
     });
 }

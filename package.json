@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "prisma": {
-    "seed": "tsx prisma/seed.t"
+    "seed": "tsx prisma/seed.ts"
   },
   "license": "ISC",
   "devDependencies": {

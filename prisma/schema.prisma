@@ -26,8 +26,6 @@ model Room {
 
   // A sala pode ter varios participantes
   Participant Participant[]
-
-  Game Game[]
 }
 
 model Game {
@@ -38,12 +36,8 @@ model Game {
   firstTeamCountryCode  String
   secondTeamCountryCode String
 
-  roomId String
-
   // O jogo pode ter varios palpites
   Guess Guess[]
-
-  room Room @relation(fields: [roomId], references: [id])
 }
 
 model Participant {
