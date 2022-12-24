@@ -8,14 +8,14 @@ async function main() {
 
     await prisma.game.create({
         data: {
-            date: `2022-12-23T01:54:52.786Z`,
+            date: `2022-12-24T21:20:52.786Z`,
             firstTeamCountryCode: "FR",
             secondTeamCountryCode: "LI",
         }
     });
     await prisma.game.create({
         data: {
-            date: `2022-12-23T01:56:52.786Z`,
+            date: `2022-12-25T19:43:52.786Z`,
             firstTeamCountryCode: "FR",
             secondTeamCountryCode: "BR",
         }
