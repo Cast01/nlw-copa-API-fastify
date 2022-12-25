@@ -42,7 +42,7 @@ async function api() {
     
     
 
-    await fastify.listen({port: 3333});
+    await fastify.listen({port: 3333 || process.env.PORT});
 }
 
 api();
